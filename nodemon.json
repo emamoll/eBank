@@ -1,0 +1,7 @@
+{
+    "watch": [
+        "srcBack"
+    ],
+    "ext": "ts",
+    "exec": "ts-node ./srcBack/index.ts"
+}

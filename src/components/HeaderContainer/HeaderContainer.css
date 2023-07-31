@@ -1,0 +1,11 @@
+.logo{
+  width: 17%;
+  height: 17%;
+  margin-left: 1%;
+  margin-top: 1%;
+}
+
+.headerColor {
+  background: linear-gradient(#888787,  #ffffff);
+  height: 10%;
+}
