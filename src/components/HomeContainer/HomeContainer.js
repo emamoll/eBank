@@ -9,7 +9,7 @@ const HomeContainer = ({ user, setUser }) => {
 
   return (
     <div>
-      <h1>Bienvenido {location.state.id}</h1>
+      <h1>Bienvenido {location.users.firstName}</h1>
       <button onClick={logout}>Cerrar sesion</button>
     </div>
 

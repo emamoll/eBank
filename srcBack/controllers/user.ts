@@ -4,10 +4,9 @@ import { checkAuth } from "../middlewares/authentication";
 import { UserJoiSchema } from "../models/user/user.schema";
 import Logger from "../services/logger";
 import { generateAuthToken } from '../middlewares/authentication'
-import { notifyNewUserByEmail, notifyNewUserRegistration } from "../services/twilio";
+// import { notifyNewUserByEmail, notifyNewUserRegistration } from "../services/twilio";
 import { UserDTO } from "../models/user/user.interface";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 interface RequestUser extends Request {
   user?: UserDTO;
 };
@@ -19,6 +18,8 @@ class UserController {
       const { email } = req.body;
       const user = await userAPI.query(email);
       const token = await generateAuthToken(user);
+
+      res.cookie('token', token);
 
       res.header('x-auth-token', token).status(200).json({
         msg: `Te damos la bienvenida ${user.firstName}`,
@@ -59,8 +60,14 @@ class UserController {
       Logger.info('Nuevo usuario creado');
       Logger.info(newUser);
 
-      notifyNewUserByEmail(newUser);
-      notifyNewUserRegistration(newUser);
+      // notifyNewUserByEmail(newUser);
+      // notifyNewUserRegistration(newUser);
+
+      const { email } = req.body;
+      const user = await userAPI.query(email);
+      const token = await generateAuthToken(user);
+
+      res.cookie('token', token);
 
       return res.status(200).json({
         msg: 'Registro con exito'
@@ -146,6 +153,28 @@ class UserController {
 
     next();
   };
+
+  // Funcion para cerrar cesion
+
+  async logout(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      await userAPI.logout(id);
+
+      res.cookie('token', '', {
+        expires: new Date(0)
+      });
+
+      res.status(200).json({
+        msg: 'Cesion cerrada'
+      });
+    } catch (error) {
+      res.status(400).json({
+        msg: 'No se pudo cerrar la cesion'
+      });
+    }
+  }
 
   // Funcion para validar que el usuario nuevo sea mayor de 18 anios
   async userLegal(req: Request, res: Response, next: NextFunction) {

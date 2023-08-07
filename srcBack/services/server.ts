@@ -1,7 +1,7 @@
 import express from 'express';
 import * as http from 'http';
 import Logger from './logger';
-// import mainRouter from '../routes';
+import mainRouter from '../route';
 import compression from 'compression';
 import cors from 'cors';
 import { ErrorRequestHandler, /*Request, Response*/ } from 'express';
@@ -55,7 +55,7 @@ app.use(compression());
 app.use(cors());
 
 // Routes
-// app.use('/api', mainRouter);
+app.use('/api', mainRouter);
 
 const swaggerPath = path.resolve(process.cwd(), './swagger.yml');
 const swaggerDoc= YAML.load(swaggerPath);

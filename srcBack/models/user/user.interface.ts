@@ -44,7 +44,7 @@ export interface UserQueryI {
 export interface UserBaseClass {
   login(data: UserDTO): Promise<UserDTO>;
   signup(data: UserDTO): Promise<UserDTO>;
-  // eslint-disable-next-line no-empty-pattern
+  logout(id: string): Promise<void>;
   getUsers([]): Promise<UserDTO[]>;
   getUserById(id: string): Promise<UserDTO>;
   deleteUser(id: string): Promise<any>;

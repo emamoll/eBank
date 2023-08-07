@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { Titulo, SectionForm, Formulario, BotonStyle, Boton, MensajeExito } from '../FormularioContainer/FormularioContainer';
 import InputContainer from '../InputContainer/InputContainer';
-import axios from 'axios'
 
 const LoginContainer = () => {
   const [correo, setCorreo] = useState({ valor: '', valido: null });
@@ -11,14 +10,6 @@ const LoginContainer = () => {
   const [formularioCorrecto, setFormularioCorrecto] = useState(null)
   async function onSubmit(e) {
     e.preventDefault();
-
-    try {
-      await axios.post('http://localhost:8080/', {
-        correo, contrasenia
-      })
-    } catch (error) {
-      console.log(error)
-    }
 
     if (correo.valido === 'true' &&
       contrasenia.valido === 'true') {

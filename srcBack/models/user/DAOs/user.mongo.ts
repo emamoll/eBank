@@ -11,7 +11,6 @@ export default class UserDAO implements UserBaseClass {
   private static client: MongoDBClient;
   user: any = UserModel;
 
-  // eslint-disable-next-line @typescript-eslint/no-useless-constructor
   constructor() { };
 
   // Creo instancia de conexion a mongo
@@ -68,6 +67,18 @@ export default class UserDAO implements UserBaseClass {
       Logger.error('Error al registrar el usuario');
       throw new Error(`Error al registrar el usuario: ${error.message}`);
     };
+  };
+
+  // Cierre de cesion
+  async logout(id: string) {
+    try {
+      const response = await this.user.findById(id);
+
+      return response;
+    } catch (error: any) {
+      Logger.error('Error al cerrar la cesion');
+      throw new Error(`Error al cerrar la cesion: ${error.message}`);
+    }
   }
 
 

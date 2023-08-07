@@ -1,6 +1,6 @@
 import Config from "../config";
 import { UserFactoryDAO } from "../models/user/DAOs/user.factory";
-import { UserDTO,  UserQueryI } from "../models/user/user.interface";
+import { UserDTO, UserQueryI } from "../models/user/user.interface";
 import { MongoDBClient } from "../services/mongodb";
 // import { cartAPI } from "./cart";
 
@@ -36,6 +36,12 @@ class UserAPI {
     // await cartAPI.createCart(newUser.id);
 
     return newUser;
+  }
+
+  async logout(id: string) {
+    const close = await this.user.logout(id);
+
+    return close;
   }
 
   // Funcion para buscar todos los usuarios
