@@ -1,10 +1,10 @@
 import './SignUpContainer.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Titulo, SectionForm, Formulario, LabelStyle, Terminos, BotonStyle, Boton, MensajeExito, MensajeError } from '../FormularioContainer/FormularioContainer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 import InputContainer from '../InputContainer/InputContainer';
-import { SignUpReq } from '../../api/SignUpReq';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 const SignUpContainer = () => {
@@ -22,7 +22,8 @@ const SignUpContainer = () => {
   const [cellphone, setCellphone] = useState({ valor: '', valido: null });
   const [terminos, setTerminos] = useState(false);
   const [formularioCorrecto, setFormularioCorrecto] = useState(null);
-  const history = useNavigate();
+  const { signup, isAuthenticated, errors } = useAuth();
+  const navigate = useNavigate();
   const expresiones = {
     firstName: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
     lastName: /^[a-zA-ZÀ-ÿ\s]{1,40}$/, // Letras y espacios, pueden llevar acentos.
@@ -77,13 +78,13 @@ const SignUpContainer = () => {
   const onChangeTerminos = (e) => {
     setTerminos(e.target.checked)
   };
+
+  useEffect(() => {
+    if (isAuthenticated) navigate('/');
+  }, [isAuthenticated])
   const onSubmit = async (e) => {
     e.preventDefault();
-    await SignUpReq(users);
-    if (users) {
-      history('/');
-    }
-    console.log(users);
+    signup(users);
     if (
       firstName.valido === 'true' &&
       lastName.valido === 'true' &&
@@ -97,11 +98,10 @@ const SignUpContainer = () => {
       number.valido === 'true' &&
       postalCode.valido === 'true' &&
       cellphone.valido === 'true' &&
-      terminos
+      terminos &&
+      errors !== null
     ) {
-
       setFormularioCorrecto(true);
-
       setFirstName({ valor: '', valido: null });
       setLastName({ valor: '', valido: null });
       setAge({ valor: '', valido: null });
@@ -264,6 +264,10 @@ const SignUpContainer = () => {
               Acepto los terminos y condiciones
             </LabelStyle>
           </Terminos>
+          {errors !== null && <MensajeError>
+            <FontAwesomeIcon icon={faExclamationTriangle} />
+            <b>Error:</b> El email ya existe
+          </MensajeError>}
           {formularioCorrecto === false && <MensajeError>
             <FontAwesomeIcon icon={faExclamationTriangle} />
             <b>Error:</b> Por favor completa el formulario correctamente
